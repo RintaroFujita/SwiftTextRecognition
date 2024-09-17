@@ -1,10 +1,11 @@
+//ContentView.swift
 import SwiftUI
 
 @available(iOS 14.0, *)
 struct ContentView: View {
     @StateObject private var imageTextRecognition = ImageTextRecognition()
     
-    let imageNames = ["image1", "image2"] // Add all your image names here
+    let directoryPath = "/Users/r/Downloads/StructuringRecognizedTextOnADocument/BusinessCompanion/LML 2"
     
     var body: some View {
         VStack {
@@ -16,13 +17,21 @@ struct ContentView: View {
                 Text(text)
             }
             
+            Text("Processed Files:")
+                .font(.headline)
+                .padding()
+            
+            List(imageTextRecognition.imageFilenames, id: \.self) { filename in
+                Text(filename)
+            }
+            
             Button("Recognize Text") {
-                imageTextRecognition.recognizeText(from: imageNames)
+                imageTextRecognition.recognizeText(from: directoryPath)
             }
             .padding()
         }
         .onAppear {
-            imageTextRecognition.recognizeText(from: imageNames) // Automatically recognize text when the view appears
+            imageTextRecognition.recognizeText(from: directoryPath) // Automatically recognize text when the view appears
         }
     }
 }
