@@ -50,9 +50,12 @@ class ImageTextRecognition: ObservableObject {
                         observation.topCandidates(1).first?.string
                     }
                     
-                    DispatchQueue.main.async {
-                        let recognizedInfo = RecognizedTextInfo(filename: imageName, recognizedText: recognizedStrings)
-                        self.recognizedTextInfoList.append(recognizedInfo)
+                    // Only append files that have recognized text
+                    if !recognizedStrings.isEmpty {
+                        DispatchQueue.main.async {
+                            let recognizedInfo = RecognizedTextInfo(filename: imageName, recognizedText: recognizedStrings)
+                            self.recognizedTextInfoList.append(recognizedInfo)
+                        }
                     }
                 }
                 
