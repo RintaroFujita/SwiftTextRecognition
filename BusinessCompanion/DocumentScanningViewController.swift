@@ -1,15 +1,19 @@
-//DocumetScanningViewController.swift
 import Foundation
 import Vision
 import SwiftUI
 
+// Struct to link the filename with its recognized text
+struct RecognizedTextInfo: Identifiable {
+    let id = UUID()
+    let filename: String
+    let recognizedText: [String]
+}
+
 class ImageTextRecognition: ObservableObject {
-    @Published var recognizedTexts: [String] = []
-    @Published var imageFilenames: [String] = [] // Stores the names of images being processed
+    @Published var recognizedTextInfoList: [RecognizedTextInfo] = []
     
     func recognizeText(from directoryPath: String) {
-        recognizedTexts.removeAll()
-        imageFilenames.removeAll() // Clear previous file names
+        recognizedTextInfoList.removeAll() // Clear previous results
 
         let fileManager = FileManager.default
         
@@ -19,9 +23,6 @@ class ImageTextRecognition: ObservableObject {
             
             // Filter out files that are not images (e.g., .png, .jpg)
             let imageFiles = files.filter { $0.lowercased().hasSuffix(".png") || $0.lowercased().hasSuffix(".jpg") }
-            
-            // Update the filenames array
-            self.imageFilenames = imageFiles
             
             // Process each image file
             for imageName in imageFiles {
@@ -50,7 +51,8 @@ class ImageTextRecognition: ObservableObject {
                     }
                     
                     DispatchQueue.main.async {
-                        self.recognizedTexts.append(contentsOf: recognizedStrings)
+                        let recognizedInfo = RecognizedTextInfo(filename: imageName, recognizedText: recognizedStrings)
+                        self.recognizedTextInfoList.append(recognizedInfo)
                     }
                 }
                 

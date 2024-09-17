@@ -1,4 +1,3 @@
-//ContentView.swift
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -9,20 +8,16 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            Text("Recognized Text:")
+            Text("Recognized Text and Files:")
                 .font(.headline)
                 .padding()
             
-            List(imageTextRecognition.recognizedTexts, id: \.self) { text in
-                Text(text)
-            }
-            
-            Text("Processed Files:")
-                .font(.headline)
-                .padding()
-            
-            List(imageTextRecognition.imageFilenames, id: \.self) { filename in
-                Text(filename)
+            List(imageTextRecognition.recognizedTextInfoList) { recognizedInfo in
+                Section(header: Text("File: \(recognizedInfo.filename)")) {
+                    ForEach(recognizedInfo.recognizedText, id: \.self) { text in
+                        Text(text)
+                    }
+                }
             }
             
             Button("Recognize Text") {
